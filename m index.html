@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Votación</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url('https://source.unsplash.com/1600x900/?nature,forest,green');
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            filter: brightness(0.7);
+        }
+        .container {
+            width: 100%;
+            max-width: 900px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: #4CAF50;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #555;
+        }
+        button {
+            margin: 15px;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            background: #4CAF50;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        button:hover {
+            background-color: #45a049;
+            transform: translateY(-3px);
+        }
+        button:active {
+            transform: translateY(1px);
+        }
+        #results {
+            margin-top: 40px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #444;
+        }
+        .bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .bar-inner {
+            height: 35px;
+            line-height: 35px;
+            color: white;
+            text-align: center;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        .solar {
+            background-color: #4CAF50;
+        }
+        .reforest {
+            background-color: #2196F3;
+        }
+        .waste {
+            background-color: #FF9800;
+        }
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 1rem;
+            color: #777;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sistema de Votación</h1>
+        <p>Responde las siguientes preguntas para elegir el mejor proyecto ecológico:</p>
+
+        <div id="question1" class="question">
+            <p><strong>1. ¿Qué proyecto consideras más importante?</strong></p>
+            <button onclick="vote(1, 1)">Energía Solar</button>
+            <button onclick="vote(1, 2)">Reforestación Urbana</button>
+            <button onclick="vote(1, 3)">Gestión de Residuos</button>
+        </div>
+
+        <div id="question2" class="question" style="display:none;">
+            <p><strong>2. ¿Cuál proyecto es más viable económicamente?</strong></p>
+            <button onclick="vote(2, 1)">Energía Solar</button>
+            <button onclick="vote(2, 2)">Reforestación Urbana</button>
+            <button onclick="vote(2, 3)">Gestión de Residuos</button>
+        </div>
+
+        <div id="question3" class="question" style="display:none;">
+            <p><strong>3. ¿Cuál proyecto beneficiará a más personas?</strong></p>
+            <button onclick="vote(3, 1)">Energía Solar</button>
+            <button onclick="vote(3, 2)">Reforestación Urbana</button>
+            <button onclick="vote(3, 3)">Gestión de Residuos</button>
+        </div>
+
+        <div id="results" style="display:none;"></div>
+    </div>
+
+    <footer>
+        &copy; 2024 Sistema de Votación Ecológica. Todos los derechos reservados.
+    </footer>
+
+    <script>
+        const projectNames = {
+            1: "Energía Solar",
+            2: "Reforestación Urbana",
+            3: "Gestión de Residuos"
+        };
+
+        const votes = {
+            1: { 1: 0, 2: 0, 3: 0 },
+            2: { 1: 0, 2: 0, 3: 0 },
+            3: { 1: 0, 2: 0, 3: 0 }
+        };
+        let currentQuestion = 1;
+
+        function vote(question, option) {
+            votes[question][option] += 1;
+            document.getElementById(`question${question}`).style.display = "none";
+            if (question < 3) {
+                currentQuestion += 1;
+                document.getElementById(`question${currentQuestion}`).style.display = "block";
+            } else {
+                displayResults();
+            }
+        }
+
+        function displayResults() {
+            let results = "<h2>Resultados de la Votación</h2>";
+            const totalVotes = { 1: 0, 2: 0, 3: 0 };
+
+            for (let q = 1; q <= 3; q++) {
+                totalVotes[1] += votes[q][1];
+                totalVotes[2] += votes[q][2];
+                totalVotes[3] += votes[q][3];
+            }
+
+            const total = totalVotes[1] + totalVotes[2] + totalVotes[3];
+
+            const percentages = {
+                1: ((totalVotes[1] / total) * 100).toFixed(1),
+                2: ((totalVotes[2] / total) * 100).toFixed(1),
+                3: ((totalVotes[3] / total) * 100).toFixed(1)
+            };
+
+            results += `<div class='bar'><div class='bar-inner solar' style='width: ${percentages[1]}%;'>${projectNames[1]}: ${percentages[1]}%</div></div>`;
+            results += `<div class='bar'><div class='bar-inner reforest' style='width: ${percentages[2]}%;'>${projectNames[2]}: ${percentages[2]}%</div></div>`;
+            results += `<div class='bar'><div class='bar-inner waste' style='width: ${percentages[3]}%;'>${projectNames[3]}: ${percentages[3]}%</div></div>`;
+
+            const maxVotes = Math.max(totalVotes[1], totalVotes[2], totalVotes[3]);
+            const winners = Object.keys(totalVotes).filter(key => totalVotes[key] === maxVotes);
+
+            if (winners.length === 1) {
+                results += `<p><strong>El proyecto ganador es: ${projectNames[winners[0]]} con ${maxVotes} votos.</strong></p>`;
+            } else {
+                results += `<p><strong>Hay un empate entre los siguientes proyectos:</strong></p>`;
+                winners.forEach(winner => {
+                    results += `<p>${projectNames[winner]}</p>`;
+                });
+            }
+
+            document.getElementById("results").innerHTML = results;
+            document.getElementById("results").style.display = "block";
+        }
+    </script>
+</body>
+</html>
